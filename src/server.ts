@@ -10,5 +10,5 @@ app.listen({ port: 3000 }, (err, address) => {
     console.error(err);
     process.exit(1);
   }
-  console.log(`🚀 Server running at ${address}`);
+  console.log(`Server running at ${address}`);
 });

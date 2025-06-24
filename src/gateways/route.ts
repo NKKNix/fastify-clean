@@ -1,7 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import { CreateUser, GetUsers } from './user';
+import * as gateways from './user';
 
 export async function userRoute(fastify: FastifyInstance) {
-  fastify.post('/users', CreateUser);
-  fastify.get('/users', GetUsers);
+  fastify.post('/users', gateways.CreateUser);
+  fastify.get('/users', gateways.GetUsers);
+  fastify.get('/users/test', gateways.findByEmail);
 }

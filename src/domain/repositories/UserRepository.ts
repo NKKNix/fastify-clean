@@ -1,10 +1,11 @@
 import { User } from '../../domain/entities/User';
-import { prisma } from '../../infrastructure/database/prisma';
+import { prisma } from '../../infrastructure/services/prisma';
 
 
 export interface UserRepository {
   create(user: User): Promise<void>;
   findByEmail(email: string): Promise<User | null>;
+  findAll(): Promise<User[]>
 }
 
 export class PrismaUserRepository implements UserRepository {
