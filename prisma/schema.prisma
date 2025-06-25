@@ -12,3 +12,12 @@ model User {
   name  String
   email String @unique
 }
+
+model Event {
+  id          String   @id @default(uuid())
+  aggregateId String   // เช่น userId
+  type        String   // เช่น "UserCreated"
+  payload     Json     // data ของ event
+  timestamp   DateTime @default(now())
+}
+
