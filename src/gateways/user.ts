@@ -3,12 +3,13 @@ import { UserService } from '../services/userService';
 import { PrismaUserRepository } from '../domain/repositories/UserRepository';
 import { RedisCacheService } from '../infrastructure/services/redis';
 import { PrismaEventStoreRepository } from '../domain/repositories/prismaEventStore';
-import { IUserEventRepository } from '../domain/repositories/userEventRepository';
+import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
 
 const userEventRepository = new PrismaEventStoreRepository();
 const userRepository = new PrismaUserRepository(userEventRepository);
 const cacheService = new RedisCacheService();
-const userService = new UserService(userRepository,cacheService,userEventRepository);
+const eventPublisher = new KafkaPublisher();
+const userService = new UserService(userRepository,cacheService,userEventRepository,eventPublisher);
 
 export const CreateUser = async (request: FastifyRequest, reply: FastifyReply) => {
   const { name, email } = request.body as { name: string; email: string };

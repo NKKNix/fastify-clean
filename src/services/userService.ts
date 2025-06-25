@@ -4,12 +4,14 @@ import { User } from '../domain/entities/User';
 import { CacheService } from '../domain/entities/Cache';
 import { randomUUID } from 'crypto';
 import { UserEvent } from '../domain/entities/user.events';
+import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
 
 export class UserService {
   constructor(
-    private userRepository: UserRepository,
-    private cacheService: CacheService,
-    private readonly eventRepo: IUserEventRepository
+    private readonly userRepository: UserRepository,
+    private readonly cacheService: CacheService,
+    private readonly eventRepo: IUserEventRepository,
+    private readonly eventPublisher: KafkaPublisher
   ) {}
 
   async execute(name: string, email: string): Promise<User> {
@@ -39,6 +41,7 @@ export class UserService {
     await this.userRepository.create(user);
     await this.cacheService.set(email, JSON.stringify(user));
     await this.eventRepo.saveEvent(user.id,event);
+    await this.eventPublisher.publish(event);
     return user;
   }
   async findByEmail(email: string): Promise<User | null> {
