@@ -1,12 +1,12 @@
-# # #Docker
+# #Docker
 
 Docker compose up -d
 
-# # #Migrate Database
+# #Migrate Database
 
 npx prisma migrate dev
 
 npx prisma generate
 
-# # #Run project
+# #Run project
 npm run dev
