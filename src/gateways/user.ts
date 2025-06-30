@@ -15,7 +15,7 @@ export const CreateUser = async (request: FastifyRequest, reply: FastifyReply) =
   const { name, email } = request.body as { name: string; email: string };
 
   try {
-    const user = await userService.execute(name, email);
+    const user = await userService.createUser(name, email);
     reply.code(201).send(user);
   } catch (error) {
     reply.code(400).send({ message: (error as Error).message });

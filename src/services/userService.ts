@@ -14,7 +14,7 @@ export class UserService {
     private readonly eventPublisher: KafkaPublisher
   ) {}
 
-  async execute(name: string, email: string): Promise<User> {
+  async createUser(name: string, email: string): Promise<User> {
     const cached = await this.cacheService.get(email);
     if (cached) {
       throw new Error('User already exists (from cache)');
