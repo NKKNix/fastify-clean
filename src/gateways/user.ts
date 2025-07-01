@@ -2,14 +2,21 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { UserService } from '../services/userService';
 import { PrismaUserRepository } from '../domain/repositories/UserRepository';
 import { RedisCacheService } from '../infrastructure/services/redis';
-import { PrismaEventStoreRepository } from '../domain/repositories/prismaEventStore';
-import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
 
-const userEventRepository = new PrismaEventStoreRepository();
-const userRepository = new PrismaUserRepository(userEventRepository);
+import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
+import { EventStoreLogRepository } from '../domain/repositories/LogRepository';
+import { EventStoreDBClient } from '@eventstore/db-client';
+
+// Replace with your actual EventStoreDB connection string
+const eventStoreClient = new EventStoreDBClient(
+  { endpoint: "localhost:2113" }, // Replace with your actual EventStoreDB endpoint
+  { insecure: true } // Set to false and provide credentials for production
+);
+const logRepository = new EventStoreLogRepository(eventStoreClient);
+const userRepository = new PrismaUserRepository();
 const cacheService = new RedisCacheService();
 const eventPublisher = new KafkaPublisher();
-const userService = new UserService(userRepository,cacheService,userEventRepository,eventPublisher);
+const userService = new UserService(userRepository,cacheService,logRepository,eventPublisher);
 
 export const CreateUser = async (request: FastifyRequest, reply: FastifyReply) => {
   const { name, email } = request.body as { name: string; email: string };
@@ -37,17 +44,8 @@ export const findByEmail = async (request: FastifyRequest, reply: FastifyReply) 
   reply.code(200).send(user);
 };
 
-export const getLog = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { id } = request.params as { id?: string };
-  if (!id) {
-    reply.code(400).send({ message: 'Id is required' });
-    return;
-  }
-  const events = await userRepository.getLog(id);
-  reply.code(200).send(events);
-};
+export const getAllLogs = async (request: FastifyRequest, reply: FastifyReply) => {
+  const logs = await logRepository.getAllLogs();
+  reply.code(200).send(logs);
+}
 
-export const getAllEventLog = async (request: FastifyRequest, reply: FastifyReply) => {
-  const events = await userService.getAllEventsLog();
-  reply.code(200).send(events);
-};

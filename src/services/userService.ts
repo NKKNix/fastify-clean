@@ -1,16 +1,16 @@
 import { UserRepository } from '../domain/repositories/UserRepository';
-import { IUserEventRepository } from '../domain/repositories/userEventRepository';
 import { User } from '../domain/entities/User';
 import { CacheService } from '../domain/entities/Cache';
 import { randomUUID } from 'crypto';
-import { UserEvent } from '../domain/entities/user.events';
 import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
+import { LogRepository } from '../domain/repositories/LogRepository';
+import { LogEntry } from '../domain/entities/LogEntry';
 
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly cacheService: CacheService,
-    private readonly eventRepo: IUserEventRepository,
+    private readonly eventRepo: LogRepository,
     private readonly eventPublisher: KafkaPublisher
   ) {}
 
@@ -29,19 +29,28 @@ export class UserService {
       name,
       email
     };
-    const event: UserEvent = {
-      type: 'UserCreated',
-      payload: {
-        userId: user.id,
-        name: user.name
-      },
-      timestamp: Date.now()
+
+    // Create the event for user creation
+    const event: LogEntry = {
+      id: randomUUID(),
+      timestamp: new Date(),
+      eventType: 'UserCreated',
+      payload: { userId: user.id, name: user.name, email: user.email },  // Payload contains relevant event data
+      source: 'service1'  // Can be set dynamically based on the source of the event (e.g., service name)
     };
-    
+
+    // Store the user entity
     await this.userRepository.create(user);
+
+    // Store the user data in cache
     await this.cacheService.set(email, JSON.stringify(user));
-    await this.eventRepo.saveEvent(user.id,event);
+
+    // Store the event in the event repository
+    await this.eventRepo.create(event);
+
+    // Publish the event to Kafka
     await this.eventPublisher.publish(event);
+
     return user;
   }
   async findByEmail(email: string): Promise<User | null> {
@@ -51,8 +60,5 @@ export class UserService {
       return user;
     }
     return await this.userRepository.findByEmail(email);
-  }
-  async getAllEventsLog(): Promise<UserEvent[]> {
-    return await this.eventRepo.getAllEvents();
   }
 }

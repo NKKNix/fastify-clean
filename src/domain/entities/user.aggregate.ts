@@ -1,40 +1,30 @@
-import { UserEvent } from './user.events';
+export interface Event {
+  id: string;
+  type: string;
+  data: any;
+  metadata?: any;
+}
 
-export class User {
-  public userId = '';
-  public name = '';
+export class UserCreated implements Event {
+  id: string;
+  type = "UserCreated";
+  data: { name: string; email: string };
+  metadata?: any;
 
-  constructor(events: UserEvent[]) {
-    for (const event of events) {
-      this.apply(event);
-    }
+  constructor(id: string, name: string, email: string) {
+    this.id = id;
+    this.data = { name, email };
   }
+}
 
-  apply(event: UserEvent) {
-    switch (event.type) {
-      case 'UserCreated':
-        this.userId = event.payload.userId;
-        this.name = event.payload.name;
-        break;
-      case 'UserUpdated':
-        this.name = event.payload.name;
-        break;
-    }
-  }
+export class UserNameUpdated implements Event {
+  id: string;
+  type = "UserNameUpdated";
+  data: { newName: string };
+  metadata?: any;
 
-  static create(userId: string, name: string): UserEvent {
-    return {
-      type: 'UserCreated',
-      payload: { userId, name },
-      timestamp: Date.now(),
-    };
-  }
-
-  changeName(name: string): UserEvent {
-    return {
-      type: 'UserUpdated',
-      payload: { userId: this.userId, name },
-      timestamp: Date.now(),
-    };
+  constructor(id: string, newName: string) {
+    this.id = id;
+    this.data = { newName };
   }
 }

@@ -44,6 +44,30 @@ services:
       KAFKA_CREATE_TOPICS: "user_created:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4318:4318" # OTLP HTTP (รับจาก Fastify app)
+
+  tempo:
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+      - ./data/tempo:/tmp/tempo
+    ports:
+      - "3200:3200"     # Tempo UI/API
+      - "4320:4320"     # OTLP HTTP (จาก OTel Collector)
+      - "4321:4321"     # OTLP gRPC (จาก OTel Collector)
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    depends_on:
+      - tempo
 volumes:
   pgdata:

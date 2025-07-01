@@ -1,6 +1,7 @@
 // domain/services/IEventPublisher.ts
-import { UserEvent } from '../entities/user.events';
+import { LogEntry } from '../entities/LogEntry';
+
 
 export interface IEventPublisher {
-  publish(event: UserEvent): Promise<void>;
+  publish(event: LogEntry): Promise<void>;
 }
