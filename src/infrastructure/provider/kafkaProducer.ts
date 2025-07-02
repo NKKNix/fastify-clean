@@ -12,13 +12,13 @@ const kafka = new Kafka({
 const producer = kafka.producer();
 
 export class KafkaPublisher implements IEventPublisher {
-  private readonly topic = process.env.KAFKA_TOPIC ?? 'user-events';
 
-  async publish(event: LogEntry): Promise<void> {
+
+  async publish(event: LogEntry, topic: string): Promise<void> {
     await producer.connect(); // คุณอาจย้าย connect ไป init phase ก็ได้
 
     await producer.send({
-      topic: this.topic,
+      topic: topic,
       messages: [
         {
           key: event.eventType,

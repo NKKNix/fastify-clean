@@ -1,6 +1,6 @@
 import { UserRepository } from '../domain/repositories/UserRepository';
 import { User } from '../domain/entities/User';
-import { CacheService } from '../domain/entities/Cache';
+import { CacheService } from '../domain/repositories/Cache';
 import { randomUUID } from 'crypto';
 import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
 import { LogRepository } from '../domain/repositories/LogRepository';
@@ -49,7 +49,7 @@ export class UserService {
     await this.eventRepo.create(event);
 
     // Publish the event to Kafka
-    await this.eventPublisher.publish(event);
+    await this.eventPublisher.publish(event,"user-events");
 
     return user;
   }

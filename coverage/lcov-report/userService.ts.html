@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76% </span>
+                <span class="strong">79.16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/25</span>
+                <span class='fraction'>19/24</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76% </span>
+                <span class="strong">79.16% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/25</span>
+                <span class='fraction'>19/24</span>
             </div>
         
             
@@ -121,11 +121,17 @@
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,19 +158,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,26 +187,23 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { UserRepository } from '../domain/repositories/UserRepository';
-import { IUserEventRepository } from '../domain/repositories/userEventRepository';
 import { User } from '../domain/entities/User';
-import { CacheService } from '../domain/entities/Cache';
+import { CacheService } from '../domain/repositories/Cache';
 import { randomUUID } from 'crypto';
-import { UserEvent } from '../domain/entities/user.events';
 import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
+import { LogRepository } from '../domain/repositories/LogRepository';
+import { LogEntry } from '../domain/entities/LogEntry';
 &nbsp;
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly cacheService: CacheService,
-    private readonly eventRepo: IUserEventRepository,
+    private readonly eventRepo: LogRepository,
     private readonly eventPublisher: KafkaPublisher
   ) {}
 &nbsp;
@@ -210,19 +222,28 @@ export class UserService {
       name,
       email
     };
-    const event: UserEvent = {
-      type: 'UserCreated',
-      payload: {
-        userId: user.id,
-        name: user.name
-      },
-      timestamp: Date.now()
+&nbsp;
+    // Create the event for user creation
+    const event: LogEntry = {
+      id: randomUUID(),
+      timestamp: new Date(),
+      eventType: 'UserCreated',
+      payload: { userId: user.id, name: user.name, email: user.email },  // Payload contains relevant event data
+      source: 'service1'  // Can be set dynamically based on the source of the event (e.g., service name)
     };
-    
+&nbsp;
+    // Store the user entity
     await this.userRepository.create(user);
+&nbsp;
+    // Store the user data in cache
     await this.cacheService.set(email, JSON.stringify(user));
-    await this.eventRepo.saveEvent(user.id,event);
-    await this.eventPublisher.publish(event);
+&nbsp;
+    // Store the event in the event repository
+    await this.eventRepo.create(event);
+&nbsp;
+    // Publish the event to Kafka
+    await this.eventPublisher.publish(event,"user-events");
+&nbsp;
     return user;
   }
   async <span class="fstat-no" title="function not covered" >findByEmail(</span>email: string): Promise&lt;User | null&gt; {
@@ -233,9 +254,6 @@ export class UserService {
     }
 <span class="cstat-no" title="statement not covered" >    return await this.userRepository.findByEmail(email);</span>
   }
-  async <span class="fstat-no" title="function not covered" >getAllEventsLog(</span>): Promise&lt;UserEvent[]&gt; {
-<span class="cstat-no" title="statement not covered" >    return await this.eventRepo.getAllEvents();</span>
-  }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -244,7 +262,7 @@ export class UserService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-26T07:30:24.136Z
+                at 2025-07-02T04:54:27.850Z
             </div>
         <script src="prettify.js"></script>
         <script>

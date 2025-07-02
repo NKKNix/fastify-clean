@@ -19,7 +19,7 @@ export class EventStoreLogRepository implements LogRepository {
     const event: JSONEventData = {
       id: log.id,  // log ID is passed to the event's ID
       contentType: "application/json",  // contentType is required as "application/json"
-      type: 'LogCreated',  // Event type indicating a log creation
+      type: log.eventType,  // Event type indicating a log creation
       data: {
         id: log.id,
         timestamp: log.timestamp.toISOString(),  // Ensure timestamp is a string (ISO format)

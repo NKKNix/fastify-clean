@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { CacheService } from '../../domain/entities/Cache';
+import { CacheService } from '../../domain/repositories/Cache';
 
 const redis = new Redis({
   host: 'localhost', 

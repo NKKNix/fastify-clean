@@ -14,9 +14,11 @@ describe('UserService - createUser', () => {
     set: jest.fn(),
   };
 
+
   const mockEventRepo = {
-    saveEvent: jest.fn(),
-    getAllEvents: jest.fn(),
+    create: jest.fn(),
+    deleteById: jest.fn(),
+    getAllLogs: jest.fn(),
   };
 
   const mockEventPublisher = {
@@ -42,7 +44,7 @@ describe('UserService - createUser', () => {
     mockUserRepository.findByEmail.mockResolvedValue(null); // No DB entry
     mockUserRepository.create.mockResolvedValue(undefined);
     mockCacheService.set.mockResolvedValue(undefined);
-    mockEventRepo.saveEvent.mockResolvedValue(undefined);
+    mockEventRepo.create.mockResolvedValue(undefined);
     mockEventPublisher.publish.mockResolvedValue(undefined);
 
     const result = await userService.createUser(name, email);
@@ -53,7 +55,7 @@ describe('UserService - createUser', () => {
     expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(email);
     expect(mockUserRepository.create).toHaveBeenCalledWith(expect.objectContaining({ name, email }));
     expect(mockCacheService.set).toHaveBeenCalled();
-    expect(mockEventRepo.saveEvent).toHaveBeenCalled();
+    expect(mockEventRepo.create).toHaveBeenCalled();
     expect(mockEventPublisher.publish).toHaveBeenCalled();
   });
 
