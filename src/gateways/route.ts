@@ -11,6 +11,7 @@ export async function userRoute(app: FastifyInstance) {
   app.get('/users/logs', gateways.getAllLogs);
   app.post('/createOrder', h.CreateOrder);
   app.get('/orders', h.GetAllOrders);
+  app.get('/orders',{ handler: h.GetAllOrders });
   // app.get('/users/:id', async (req, reply) => {
   //   const { id } = req.params as any;
   //   const events = await repo.getEvents(id);

@@ -46,3 +46,13 @@ enum OrderStatus {
   FAILED
 }
 
+model Inventory {
+  id         String   @id @default(cuid())  // ใช้ cuid() เพื่อสร้าง id อัตโนมัติ
+  productId  String   @unique               // รหัสสินค้า (product SKU หรือรหัสอื่นๆ ที่ไม่ซ้ำกัน)
+  stock      Int      @default(0)           // จำนวนสินค้าในสต๊อก
+  reserved   Int      @default(0)           // จำนวนสินค้าที่จองแล้ว
+  createdAt  DateTime @default(now())       // เวลาในการสร้างข้อมูล
+  updatedAt  DateTime @updatedAt           // เวลาในการอัปเดตข้อมูล
+
+  @@index([productId])  // สร้าง index เพื่อเพิ่มประสิทธิภาพในการค้นหา
+}

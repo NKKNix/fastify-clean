@@ -1,15 +1,12 @@
 import 'dotenv/config';
-import Fastify from 'fastify';
-import { userRoute } from './gateways/route';
+import { PrismaInventRepository } from './domain/repositories/InventRepository';
+import { InventoryService } from './services/inventoryService';
+import { startConsumer } from './infrastructure/services/kafkaConsumer';
 
-const app = Fastify();
+const inventoryRepository = new PrismaInventRepository();
 
-app.register(userRoute);
+// สร้าง Use Case
+const reserveInventoryService = new InventoryService(inventoryRepository);
 
-app.listen({ port: Number(process.env.PORT) }, (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  console.log(`Server running at ${address}`);
-});
+// เริ่มต้น Kafka Consumer
+startConsumer(reserveInventoryService).catch(console.error);
