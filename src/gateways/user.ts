@@ -3,7 +3,7 @@ import { UserService } from '../services/userService';
 import { PrismaUserRepository } from '../domain/repositories/UserRepository';
 import { RedisCacheService } from '../infrastructure/services/redis';
 
-import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
+import { KafkaPublisher } from '../infrastructure/services/kafkaProducer';
 import { EventStoreLogRepository } from '../domain/repositories/LogRepository';
 import { EventStoreDBClient } from '@eventstore/db-client';
 
@@ -22,15 +22,15 @@ export const CreateUser = async (request: FastifyRequest, reply: FastifyReply) =
   const { name, email } = request.body as { name: string; email: string };
 
   try {
-    const user = await userService.createUser(name, email);
-    reply.code(201).send(user);
+    await userService.createUser(name, email);
+    reply.code(201).send({message: "User created successfully"});
   } catch (error) {
     reply.code(400).send({ message: (error as Error).message });
   }
 };
 
 export const GetUsers = async (request: FastifyRequest, reply: FastifyReply) => {
-  const users = await userRepository.findAll();
+  const users = await userService.findAllUsers();
   reply.code(200).send(users);
 };
 

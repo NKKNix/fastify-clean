@@ -46,3 +46,11 @@ enum OrderStatus {
   FAILED
 }
 
+model OutboxEvent {
+  id        String   @id @default(cuid())
+  aggregateId String
+  eventType String
+  payload Json
+  createdAt    DateTime  @default(now())
+  processed Boolean @default(false)
+}

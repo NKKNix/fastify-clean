@@ -6,3 +6,7 @@ docker exec -it kafka_broker kafka-topics.sh --bootstrap-server localhost:9092 -
 
 # Check test coverage
 npx jest --coverage
+
+# Docker pg query table
+docker exec -it postgres_db psql -U user appdb
+SELECT * FROM "public"."Inventory";

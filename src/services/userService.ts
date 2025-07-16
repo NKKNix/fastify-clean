@@ -2,7 +2,7 @@ import { UserRepository } from '../domain/repositories/UserRepository';
 import { User } from '../domain/entities/User';
 import { CacheService } from '../domain/repositories/Cache';
 import { randomUUID } from 'crypto';
-import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
+import { KafkaPublisher } from '../infrastructure/services/kafkaProducer';
 import { LogRepository } from '../domain/repositories/LogRepository';
 import { LogEntry } from '../domain/entities/LogEntry';
 
@@ -51,7 +51,7 @@ export class UserService {
     // Publish the event to Kafka
     await this.eventPublisher.publish(event,"user-events");
 
-    return user;
+    return user
   }
   async findByEmail(email: string): Promise<User | null> {
     const cached = await this.cacheService.get(email);
@@ -60,5 +60,15 @@ export class UserService {
       return user;
     }
     return await this.userRepository.findByEmail(email);
+  }
+  async findAllUsers(): Promise<User[]> {
+    const cache = await this.cacheService.get('users');
+    if (cache) {
+      const users = JSON.parse(cache);
+      console.log("Users from cache");
+      return users;
+    }
+    this.cacheService.set('users', JSON.stringify(await this.userRepository.findAll()));
+    return await this.userRepository.findAll();
   }
 }

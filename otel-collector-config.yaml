@@ -1,0 +1,20 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  otlp/tempo:
+    endpoint: tempo:4321
+    tls:
+      insecure: true
+
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlp/tempo, debug]
