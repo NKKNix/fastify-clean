@@ -32,10 +32,16 @@ export class OrderService {
       source: 'service1'  // Can be set dynamically based on the source of the event (e.g., service name)
     };
     await this.eventRepo.create(event);
+    await this.eventPublisher.publish(event,"order-service");
     const order = await this.orderRepository.create(user.id, product);
     return order
   }
   async getAllOrders(): Promise<Order[]> {
+    const cached = await this.cacheService.get('orders');
+    if (cached) {
+      return JSON.parse(cached);
+    }
+    this.cacheService.set('orders', JSON.stringify(await this.orderRepository.getAll()));
     return await this.orderRepository.getAll();
   }
   async createOrderEvent(data: { userId: string; product: string }): Promise<void> {

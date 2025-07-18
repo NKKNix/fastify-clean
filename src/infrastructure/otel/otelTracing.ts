@@ -6,7 +6,6 @@ import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 
 
-// 🔽 สร้าง Exporter ที่ใช้ HTTP และชี้ไปที่พอร์ต 4318
 const traceExporter = new OTLPTraceExporter({
   url: 'http://localhost:4318/v1/traces',
 });

@@ -22,7 +22,6 @@ import { EventStoreDBClient } from "@eventstore/db-client";
 // ฟังก์ชันสำหรับสร้างแอป
 export function build(deps: AppDependencies): FastifyInstance {
   const app = Fastify();
-
   if (process.env.NODE_ENV !== 'test') {
     registerSwagger(app);
   }

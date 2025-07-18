@@ -3,7 +3,7 @@ import { UserService } from '../../src/services/userService';
 
 
 
-describe('UserService - createUser', () => {
+describe('UserService', () => {
   const mockUserRepository = {
     findByEmail: jest.fn(),
     create: jest.fn(),
@@ -35,8 +35,8 @@ describe('UserService - createUser', () => {
   beforeEach(() => {
     jest.clearAllMocks(); // reset mock calls and data
   });
-
-  it('should create a new user successfully when no cache or DB entry exists', async () => {
+  describe('createUser()', () => {
+    it('should create a new user successfully when no cache or DB entry exists', async () => {
     const name = 'Alice';
     const email = 'alice@example.com';
 
@@ -86,6 +86,7 @@ describe('UserService - createUser', () => {
     expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(email);
     expect(mockUserRepository.create).not.toHaveBeenCalled();
   });
+  })
   describe('findByEmail()', () => {
     it('should return user from cache if exists', async () => {
       // ...

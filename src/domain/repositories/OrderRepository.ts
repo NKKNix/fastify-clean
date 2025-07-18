@@ -11,10 +11,12 @@ export interface OrderRepository {
 export class PrismaOrderRepository implements OrderRepository {
   constructor() {}
   async create(user: string, product: Array<Order>): Promise<void> {
+    let sum = 0;
+    product.map((item: any) => (sum += item.qty));
     await prisma.order.create({
     data: {
       userId: user,
-      totalAmount: 1000,
+      totalAmount: sum,
       items: {
         create: product.map((item: any) => ({
           productId: item.productId,
@@ -33,7 +35,7 @@ export class PrismaOrderRepository implements OrderRepository {
       const order = await tx.order.create({
         data: {
           userId: data.userId,
-          totalAmount: 1000,
+          totalAmount: 1,
           items: {
             create: {
               productId: data.product,

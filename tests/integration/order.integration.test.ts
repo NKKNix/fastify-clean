@@ -4,6 +4,7 @@ import { FastifyInstance } from 'fastify';
 import request from 'supertest';
 import { build } from '../../src/app'; // import build function ที่ refactor แล้ว
 import { OrderService } from '../../src/services/orderService';
+import { prisma } from '../../src/infrastructure/services/prisma';
 
 describe('Order API - Integration Tests', () => {
   let app: FastifyInstance;
@@ -33,8 +34,8 @@ describe('Order API - Integration Tests', () => {
   });
 
   afterAll(async () => {
-    // ปิดการเชื่อมต่อของแอปหลังเทสต์ทั้งหมดเสร็จสิ้น
     await app.close();
+    await prisma.$disconnect();
   });
 
   // --- Test Case 1: การสร้าง Order สำเร็จ ---
@@ -42,7 +43,7 @@ describe('Order API - Integration Tests', () => {
     it('should return 201 and success message when order is placed successfully', async () => {
       // Arrange: กำหนดข้อมูลที่จะส่งไป
       const payload = {
-        name: 'jame23435@gmail.com',
+        name: 'gg@gmail.com',
         order: [{ productId: 'c1', qty: 2 }],
       };
 
@@ -94,11 +95,13 @@ describe('Order API - Integration Tests', () => {
         expect(mockOrderService.getAllOrders).toHaveBeenCalledTimes(1);
     });
   });
+
+  // --- Test Case 3: การสร้าง Order Event สำเร็จ ---
   describe('POST /orders/event', () => { 
     it('should return 201 and success message',async () => {
       const payload = {
-        name: 'jame23435@gmail.com',
-        order: 'keyboard',
+        name: 'test',
+        order: 'c1',
       };
       mockOrderService.createOrderEvent.mockResolvedValue(undefined);
       const response = await request(app.server)
