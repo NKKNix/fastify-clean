@@ -21,7 +21,7 @@ export class PrismaInventRepository implements InventRepository {
         where: { productId: productId },
         data: {
         stock: {
-            decrement: qty, // ลดจำนวนสินค้าตามที่ต้องการ
+            decrement: qty,
         },
         },
     });

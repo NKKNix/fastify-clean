@@ -14,7 +14,6 @@ export async function startConsumer(reserveInventoryService: InventoryService) {
 
   await consumer.run({
     eachMessage: async ({ message }) => {
-      const traceContext = message.headers?.['trace-context']?.toString();
       const span = trace.getTracer('kafka-consumer-tracer').startSpan('process_kafka_message', {
         kind: SpanKind.CONSUMER,
       });

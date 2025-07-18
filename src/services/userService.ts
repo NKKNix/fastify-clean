@@ -2,7 +2,7 @@ import { UserRepository } from '../domain/repositories/UserRepository';
 import { User } from '../domain/entities/User';
 import { CacheService } from '../domain/repositories/Cache';
 import { randomUUID } from 'crypto';
-import { KafkaPublisher } from '../infrastructure/provider/kafkaProducer';
+import { KafkaPublisher } from '../infrastructure/services/kafkaProducer';
 import { LogRepository } from '../domain/repositories/LogRepository';
 import { LogEntry } from '../domain/entities/LogEntry';
 

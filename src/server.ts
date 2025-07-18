@@ -5,7 +5,7 @@ import { startConsumer } from './infrastructure/services/kafkaConsumer';
 
 const inventoryRepository = new PrismaInventRepository();
 
-// สร้าง Use Case
+
 const reserveInventoryService = new InventoryService(inventoryRepository);
 
 // เริ่มต้น Kafka Consumer

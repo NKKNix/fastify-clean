@@ -28,16 +28,19 @@ export class InventoryService {
         event.payload.product.map(async (item: any) => {
             // ค้นหาสินค้าในฐานข้อมูล
             const product = await this.inventoryRepository.findProductById(item.productId);
-
+            console.log("this is",product)
             // ตรวจสอบสต๊อกสินค้า
             if (!product) {
-                this.inventoryRepository.addNewProduct(item.productId, 1000);
+                this.inventoryRepository.addNewProduct(item.productId, item.qty);
             }else if (product.stock < item.qty){
                 console.log("Inventory not enough");
             }
-
             // อัปเดตสต๊อกสินค้าในฐานข้อมูล
-            await this.inventoryRepository.updateStock(item.productId, item.qty);
+            try {
+                await this.inventoryRepository.updateStock(item.productId, item.qty);
+            } catch (error) {
+                console.error("Error while reserving inventory:", error);
+            }
             
         })
         

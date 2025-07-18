@@ -3,9 +3,9 @@ import { LogEntry } from "../domain/entities/LogEntry";
 import { CacheService } from "../domain/repositories/Cache";
 import { LogRepository } from "../domain/repositories/LogRepository";
 import { UserRepository } from "../domain/repositories/UserRepository";
-import { KafkaPublisher } from "../infrastructure/provider/kafkaProducer";
 import { Order } from "@prisma/client";
 import { OrderRepository } from "../domain/repositories/OrderRepository";
+import { KafkaPublisher } from "../infrastructure/services/kafkaProducer";
 
 export class OrderService {
   constructor(
