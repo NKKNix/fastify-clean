@@ -1,8 +1,10 @@
 # This repository have 2 branch 2 service
 ## main and feature/log-history
-this repo is contain with OutBoxEvent ,unit test, integrate test, otel tracing,otel metric,kafka producer that send message to kafkaBroker
+this branch is have role to send message from kafka to kafka Broker, this branch is contain OutBoxEvent ,unit test, integrate test, otel tracing,otel metric,kafka producer
 
 ## service/inventory
-this repo is contain kafka consumer that get message from kafkaBroker and it have role to decrease stock in DB
+this branch is have role to receive message from kafka broker to decrease order stock in Databas
 
-Both Database is seperate not use the same database
+## ETC
+-Both Database is seperate not use the same database
+
