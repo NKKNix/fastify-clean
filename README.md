@@ -1,16 +1,10 @@
-# Docker and install eventstore for logging
+# This repository have 2 branch 2 service
+## main and feature/log-history
+this branch has the role to send message from kafka to kafka Broker, which contain OutBoxEvent ,unit test, integrate test, otel tracing,otel metric,kafka producer, Swagger
 
-Docker compose up -d
+## service/inventory
+this branch has the role to receive message from kafka broker to decrease order stock in Database
 
-docker run --name esdb-node -it -p 2113:2113 \
-    eventstore/eventstore:latest --insecure --run-projections=All
-    --enable-atom-pub-over-http
+## ETC
+ Both branch have seperate Database
 
-# Migrate Database
-
-npx prisma migrate dev
-
-npx prisma generate
-
-# Run project
-npm run dev
