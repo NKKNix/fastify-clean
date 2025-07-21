@@ -1,27 +1,23 @@
+# tempo.yaml
+
 server:
-  http_listen_port: 3200
+  http_listen_port: 3200 # Port สำหรับเข้าหน้า UI ของ Tempo
 
 distributor:
   receivers:
     otlp:
       protocols:
+        # เปิดรับข้อมูล Traces จาก OpenTelemetry Collector ผ่าน gRPC
         grpc:
-          endpoint: 0.0.0.0:4321
-        http:
-          endpoint: 0.0.0.0:4320
+          endpoint: 0.0.0.0:4317
 
 ingester:
-  trace_idle_period: 10s
+  # กำหนดว่าจะ flush ข้อมูลจาก memory ลง storage บ่อยแค่ไหน (ดีสำหรับ dev)
   max_block_duration: 5m
-
-compactor:
-  compaction:
-    block_retention: 1h
 
 storage:
   trace:
-    backend: local
+    backend: local # บอกให้เก็บข้อมูลไว้ในเครื่อง (filesystem)
     local:
-      path: /tmp/tempo/traces
-    wal:
-      path: /tmp/tempo/wal
+      # ตำแหน่งที่เก็บข้อมูล ซึ่งเราได้ mount volume ไว้ใน docker-compose
+      path: /tmp/tempo

@@ -1,15 +1,25 @@
+# otel-collector-config.yaml
+
 receivers:
   otlp:
     protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
 
 exporters:
-  otlp/tempo:
-    endpoint: tempo:4321
+  # Exporter สำหรับส่ง Traces ไปที่ Tempo
+  otlp:
+    endpoint: "tempo:4317"
     tls:
       insecure: true
 
+  # Exporter สำหรับให้ Prometheus มาดึงข้อมูล Metrics
+  prometheus:
+    endpoint: "0.0.0.0:9090"
+  
+  # Exporter สำหรับพิมพ์ Log เพื่อการดีบัก
   debug:
     verbosity: detailed
 
@@ -17,4 +27,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp/tempo, debug]
+      exporters: [otlp, debug] # ส่ง Trace ไปที่ Tempo และพิมพ์ออก Log
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus, debug] # ส่ง Metric ไปให้ Prometheus และพิมพ์ออก Log
