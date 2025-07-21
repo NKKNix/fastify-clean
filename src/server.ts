@@ -1,14 +1,14 @@
-import Fastify from 'fastify';
-import { userRoute } from './gateways/route';
+// src/server.ts
+import { buildRealApp } from './app';
+import { startOutboxWorker } from './infrastructure/services/outBoxEvent';
 
-const app = Fastify();
+const app = buildRealApp();
 
-app.register(userRoute);
-
-app.listen({ port: 3000 }, (err, address) => {
+app.listen({ port: Number(process.env.PORT) || 3000 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
   }
   console.log(`Server running at ${address}`);
+  startOutboxWorker(); // รัน worker หลังจาก server พร้อม
 });

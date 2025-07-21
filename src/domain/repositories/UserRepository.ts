@@ -2,6 +2,7 @@ import { User } from '../../domain/entities/User';
 import { prisma } from '../../infrastructure/services/prisma';
 
 
+
 export interface UserRepository {
   create(user: User): Promise<void>;
   findByEmail(email: string): Promise<User | null>;
@@ -9,7 +10,7 @@ export interface UserRepository {
 }
 
 export class PrismaUserRepository implements UserRepository {
-
+  constructor() {}
   async create(user: User): Promise<void> {
     await prisma.user.create({ data: user });
   }
@@ -22,4 +23,5 @@ export class PrismaUserRepository implements UserRepository {
     const users = await prisma.user.findMany();
     return users.map(user => ({ id: user.id, name: user.name, email: user.email }));
   }
+
 }

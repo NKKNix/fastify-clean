@@ -12,3 +12,45 @@ model User {
   name  String
   email String @unique
 }
+
+model Event {
+  id          String   @id @default(uuid())
+  aggregateId String   // เช่น userId
+  type        String   // เช่น "UserCreated"
+  payload     Json     // data ของ event
+  timestamp   DateTime @default(now())
+}
+model Order {
+  id           String    @id @default(cuid())
+  userId       String
+  totalAmount  Float
+  status       OrderStatus @default(PENDING)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+enum OrderStatus {
+  PENDING
+  INVENTORY_RESERVED
+  PAID
+  COMPLETED
+  FAILED
+}
+
+model OutboxEvent {
+  id        String   @id @default(cuid())
+  aggregateId String
+  eventType String
+  payload Json
+  createdAt    DateTime  @default(now())
+  processed Boolean @default(false)
+}

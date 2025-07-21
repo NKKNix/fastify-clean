@@ -1,0 +1,18 @@
+# prometheus.yml
+
+global:
+  scrape_interval: 5s # ความถี่ในการดึงข้อมูล (ทุก 15 วินาที)
+  evaluation_interval: 5s
+
+scrape_configs:
+  # Job แรก: ดึงข้อมูลจากตัว Prometheus เอง (สำหรับการ monitor ตัวเอง)
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Job ที่สอง: ดึงข้อมูล Metrics จาก OpenTelemetry Collector
+  - job_name: "otel-collector"
+    static_configs:
+      # 'otel-collector:9090' คือการอ้างอิงถึง service ชื่อ 'otel-collector'
+      # ใน docker-compose บน port ที่เราเปิดไว้ใน otel-collector-config.yaml
+      - targets: ["otel-collector:9090"]
